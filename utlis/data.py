@@ -1,43 +1,55 @@
-from db.models import Region, HabitCategory, HabitStatus, ProfileType
+from db.models import Region, HabitCategory, HabitStatus, ProfileType, InteractionType
 from faker import Faker
 from datetime import datetime
-from .full import male_names, female_names, domains
+from .full import male_names, female_names, domains, habits_by_category
 import random
 
 
 faker = Faker()
+used_emails = set()
 
 
 def fake_user():
-    if random.random() < 0.5:
-        name = random.choice(male_names)
-    else:
-        name = random.choice(female_names)
-    username = (
-        name.lower()
-        .replace(" ", "")
-        .replace("á", "a")
-        .replace("é", "e")
-        .replace("í", "i")
-        .replace("ó", "o")
-        .replace("ú", "u")
-        .replace("ñ", "n")
-    )
-    domain = random.choice(domains)
-    email = f"{username}{random.randint(1, 99)}{domain}"
-    return {
-        "name": name,
-        "email": email,
-        "age": random.randint(12, 70),
-        "region": random.choice(list(Region)),
-    }
+    global used_emails
+
+    while True:
+        if random.random() < 0.5:
+            name = random.choice(male_names)
+        else:
+            name = random.choice(female_names)
+
+        username = (
+            name.lower()
+            .replace(" ", "")
+            .replace("á", "a")
+            .replace("é", "e")
+            .replace("í", "i")
+            .replace("ó", "o")
+            .replace("ú", "u")
+            .replace("ñ", "n")
+        )
+
+        domain = random.choice(domains)
+        email = f"{username}{random.randint(1, 99999)}{domain}"
+
+        if email not in used_emails:
+            used_emails.add(email)
+            return {
+                "name": name,
+                "email": email,
+                "age": random.randint(12, 70),
+                "region": random.choice(list(Region)),
+            }
 
 
 def fake_habit():
+    category = random.choice(list(HabitCategory))
+    name, description = random.choice(habits_by_category[category.value])
+
     return {
-        "name": faker.word(),
-        "category": random.choice(list(HabitCategory)),
-        "description": faker.sentence(),
+        "name": name,
+        "category": category,
+        "description": description,
     }
 
 
@@ -70,4 +82,13 @@ def fake_recommendation(user_id):
         "userId": user_id,
         "message": random.choice(messages),
         "shownTime": now.strftime("%H:%M"),
+    }
+
+
+def fake_interaction(user_id, target_id):
+    return {
+        "userId": user_id,
+        "type": random.choice(list(InteractionType)),
+        "target": target_id,
+        "timestamp": faker.date_time_this_year(),
     }

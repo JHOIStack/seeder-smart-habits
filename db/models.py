@@ -58,6 +58,7 @@ class User(Base):
     habits = relationship("UserHabit", back_populates="user")
     profile = relationship("Profile", back_populates="user")
     recommendations = relationship("Recommendation", back_populates="user")
+    interactions = relationship("Interaction", back_populates="user")
 
 
 class Habit(Base):
@@ -106,4 +107,14 @@ class Recommendation(Base):
     shownTime = Column(String)
     
     user = relationship("User", back_populates="recommendations")
+
+class Interaction(Base): 
+    __tablename__ = "Interaction"
     
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    userId = Column(String, ForeignKey("User.id"))
+    type = Column(Enum(InteractionType))
+    target = Column(String)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="interactions")
