@@ -28,7 +28,7 @@ def seed_interactions(num_interactions=10):
         InteractionType.COMPLETE,
         InteractionType.SKIP,
     ]
-    weights = [0.2, 0.4, 0.2, 0.2]  # ! IGNORE tiene mas peso EN ESA 
+    weights = [0.2, 0.4, 0.2, 0.2]  # ! IGNORE tiene mas peso EN ESA
 
     for _ in range(num_interactions):
         user = random.choice(users)
