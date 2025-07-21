@@ -51,6 +51,7 @@ class User(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String)
     email = Column(String, unique=True)
+    password = Column(String)
     age = Column(Integer)
     region = Column(Enum(Region))
     createdAt = Column(DateTime, default=datetime.utcnow)

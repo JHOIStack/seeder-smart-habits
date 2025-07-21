@@ -1,8 +1,9 @@
-from db.models import Region, HabitCategory, HabitStatus, ProfileType, InteractionType
+import random
+import bcrypt
 from faker import Faker
 from datetime import datetime
 from .full import male_names, female_names, domains, habits_by_category
-import random
+from db.models import Region, HabitCategory, HabitStatus, ProfileType, InteractionType
 
 
 faker = Faker()
@@ -31,12 +32,14 @@ def fake_user():
 
         domain = random.choice(domains)
         email = f"{username}{random.randint(1, 99999)}{domain}"
+        password = bcrypt.hashpw("12345678".encode('utf-8'), bcrypt.gensalt(10)).decode('utf-8')
 
         if email not in used_emails:
             used_emails.add(email)
             return {
                 "name": name,
                 "email": email,
+                "password" : password,
                 "age": random.randint(12, 70),
                 "region": random.choice(list(Region)),
             }
