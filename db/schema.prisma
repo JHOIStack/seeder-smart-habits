@@ -21,6 +21,7 @@ model User {
   age       Int
   region    Region?
   createdAt DateTime @default(now())
+  role     UserRole @default(COMMON)
 
   habits          UserHabit[]
   recommendations Recommendation[]
@@ -110,4 +111,9 @@ enum InteractionType {
   IGNORE
   COMPLETE
   SKIP
+}
+
+enum UserRole {
+  COMMON
+  SUPER
 }

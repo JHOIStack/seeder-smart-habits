@@ -44,6 +44,10 @@ class InteractionType(str, enum.Enum):
     COMPLETE = "COMPLETE"
     SKIP = "SKIP"
 
+class UserRole(str, enum.Enum):
+    COMMON = "COMMON"
+    SUPER = "SUPER"
+
 
 class User(Base):
     __tablename__ = "User"
@@ -55,6 +59,7 @@ class User(Base):
     age = Column(Integer)
     region = Column(Enum(Region))
     createdAt = Column(DateTime, default=datetime.utcnow)
+    role = Column(Enum(UserRole), default=UserRole.COMMON)
 
     habits = relationship("UserHabit", back_populates="user")
     profile = relationship("Profile", back_populates="user")
